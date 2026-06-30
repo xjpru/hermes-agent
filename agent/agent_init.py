@@ -1890,6 +1890,16 @@ def init_agent(
             "is_anthropic_oauth": agent._is_anthropic_oauth,
         })
 
+    # Collaboration learning framework — observes patterns, extracts preferences
+    agent._collaboration_manager = None
+    if getattr(agent, "_memory_relevance_enabled", True):
+        try:
+            from agent.collaboration.manager import CollaborationLearningManager
+            agent._collaboration_manager = CollaborationLearningManager()
+            agent._collaboration_manager.initialize(session_id=agent.session_id)
+        except Exception as e:
+            logger.debug("Collaboration learning init failed: %s", e)
+
 
 
 __all__ = ["init_agent"]
